@@ -37,7 +37,17 @@ def transform_earthquakes(features):
 
         earthquakes.append(earthquake)
 
-    df = pd.DataFrame(earthquakes)
+    columns = [
+    "earthquake_id",
+    "magnitude",
+    "place",
+    "time",
+    "longitude",
+    "latitude",
+    "depth_km",
+    ]
+
+    df = pd.DataFrame(earthquakes, columns=columns)
 
     if not df.empty:
         df["time"] = pd.to_datetime(
