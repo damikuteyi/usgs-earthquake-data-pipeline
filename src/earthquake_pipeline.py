@@ -10,7 +10,7 @@ USGS_API_URL = (
 
 def fetch_earthquakes():
     """Fetch the latest earthquake records from the USGS API."""
-    response = requests.get(USGS_API_URL, timeout=30)
+    response = requests.get(USGS_API_URL, timeout=40)
     response.raise_for_status()
 
     data = response.json()
