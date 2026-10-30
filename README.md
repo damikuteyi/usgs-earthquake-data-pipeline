@@ -57,4 +57,40 @@ USGS Earthquake Hazards Program — [Earthquake GeoJSON Feeds](https://earthquak
 
 ## Current Scope
 
-This initial version implements API extraction, data transformation, basic validation, and database loading. Automated tests and additional SQL analyses are planned as the project develops.
+## Analytics
+
+The project includes reusable SQL analytics functions implemented in
+`src/analytics.py` using DuckDB:
+
+- Earthquake magnitude distribution.
+- Top 10 largest earthquakes.
+- Earthquake distribution by hemisphere.
+
+The analytics functions return pandas DataFrames and use read-only
+database connections.
+
+## Automated Testing
+
+The project uses pytest to validate its functionality.
+
+Seven automated tests cover:
+
+- Earthquake data transformation.
+- Missing magnitude detection.
+- Invalid geographic coordinates.
+- Empty API responses.
+- Magnitude distribution analytics.
+- Largest earthquake queries.
+- Geographic hemisphere analysis.
+
+Run the tests from the project root:
+
+```bash
+python -m pytest -v
+```
+
+## Current Scope
+
+The pipeline retrieves the latest USGS all-day earthquake feed,
+transforms and validates the records, loads them into DuckDB,
+and supports reusable SQL-based analysis.
