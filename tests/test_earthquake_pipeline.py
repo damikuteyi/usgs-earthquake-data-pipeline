@@ -3,6 +3,9 @@ import pandas as pd
 import duckdb
 import pytest
 import src.analytics as analytics
+from unittest.mock import patch, Mock
+import requests
+from src.earthquake_pipeline import fetch_earthquakes
 
 
 @pytest.fixture
@@ -192,3 +195,74 @@ def test_transform_earthquakes_handles_empty_input():
         "latitude",
         "depth_km",
     ]
+
+def test_fetch_earthquakes_handles_connection_error():
+    with patch(
+        "src.earthquake_pipeline.requests.get",
+        side_effect=requests.exceptions.ConnectionError(
+            "Unable to connect to USGS"
+        ),
+    ):
+        with pytest.raises(RuntimeError, match="Failed to fetch earthquake data"):
+            fetch_earthquakes()
+
+def test_fetch_earthquakes_handles_http_error():
+    mock_response = Mock()
+    mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError(
+        "500 Server Error"
+    )
+
+    with patch(
+        "src.earthquake_pipeline.requests.get",
+        return_value=mock_response,
+    ):
+        with pytest.raises(
+            RuntimeError,
+            match="Failed to fetch earthquake data",
+        ):
+            fetch_earthquakes()
+
+def test_fetch_earthquakes_handles_timeout():
+    with patch(
+        "src.earthquake_pipeline.requests.get",
+        side_effect=requests.exceptions.Timeout("Request timed out"),
+    ):
+        with pytest.raises(
+            RuntimeError,
+            match="Failed to fetch earthquake data",
+        ):
+            fetch_earthquakes()
+
+def test_fetch_earthquakes_handles_invalid_json():
+    mock_response = Mock()
+    mock_response.raise_for_status.return_value = None
+    mock_response.json.side_effect = requests.exceptions.JSONDecodeError(
+        "Invalid JSON",
+        "invalid response",
+        0,
+    )
+
+    with patch(
+        "src.earthquake_pipeline.requests.get",
+        return_value=mock_response,
+    ):
+        with pytest.raises(
+            RuntimeError,
+            match="Failed to fetch earthquake data",
+        ):
+            fetch_earthquakes()
+
+def test_fetch_earthquakes_handles_missing_features():
+    mock_response = Mock()
+    mock_response.raise_for_status.return_value = None
+    mock_response.json.return_value = {"type": "FeatureCollection"}
+
+    with patch(
+        "src.earthquake_pipeline.requests.get",
+        return_value=mock_response,
+    ):
+        with pytest.raises(
+            RuntimeError,
+            match="Invalid response received from USGS",
+        ):
+            fetch_earthquakes()

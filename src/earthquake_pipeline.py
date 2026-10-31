@@ -10,12 +10,27 @@ USGS_API_URL = (
 
 def fetch_earthquakes():
     """Fetch the latest earthquake records from the USGS API."""
-    response = requests.get(USGS_API_URL, timeout=30)
-    response.raise_for_status()
 
-    data = response.json()
-    return data["features"]
+    try:
+        response = requests.get(USGS_API_URL, timeout=30)
+        response.raise_for_status()
 
+        data = response.json()
+
+        if "features" not in data:
+            raise ValueError("USGS response does not contain earthquake features.")
+
+        return data["features"]
+
+    except requests.exceptions.RequestException as error:
+        raise RuntimeError(
+            f"Failed to fetch earthquake data from USGS: {error}"
+        ) from error
+
+    except (ValueError, TypeError) as error:
+        raise RuntimeError(
+            f"Invalid response received from USGS: {error}"
+        ) from error
 
 def transform_earthquakes(features):
     """Transform raw USGS records into a structured DataFrame."""

@@ -70,7 +70,7 @@ if __name__ == "__main__":
     distribution = get_magnitude_distribution()
     print("\nEarthquake Magnitude Distribution:")
     print(distribution)
-    
+
     largest = get_largest_earthquakes()
     print("\nTop 10 Largest Earthquakes:")
     print(largest)
