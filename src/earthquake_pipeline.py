@@ -40,6 +40,13 @@ def fetch_earthquakes():
 
         return features
 
+    except requests.exceptions.JSONDecodeError as error:
+        logger.error("Invalid JSON received from USGS: %s", error)
+
+        raise RuntimeError(
+            f"Invalid response received from USGS: {error}"
+        ) from error
+
     except requests.exceptions.RequestException as error:
         logger.error("USGS API request failed: %s", error)
 
