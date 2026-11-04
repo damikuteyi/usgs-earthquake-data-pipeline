@@ -1,10 +1,8 @@
-
 import logging
 
 import duckdb
 import pandas as pd
 import requests
-
 
 USGS_API_URL = (
     "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson"
@@ -60,7 +58,6 @@ def fetch_earthquakes():
         raise RuntimeError(
             f"Invalid response received from USGS: {error}"
         ) from error
-
 
 def transform_earthquakes(features):
     """Transform raw USGS records into a structured DataFrame."""

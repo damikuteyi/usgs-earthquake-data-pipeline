@@ -133,7 +133,6 @@ def test_transform_earthquakes_handles_empty_input():
 
     assert list(df.columns) == expected_columns
 
-
 # --------------------------------------------------
 # DATA QUALITY TESTS
 # --------------------------------------------------
@@ -185,7 +184,6 @@ def test_validate_earthquakes_detects_invalid_coordinates():
 
     assert report["invalid_latitude"] == 1
     assert report["invalid_longitude"] == 1
-
 
 # --------------------------------------------------
 # ANALYTICS TESTS
@@ -254,7 +252,6 @@ def test_fetch_earthquakes_handles_connection_error(caplog):
 
     assert "USGS API request failed" in caplog.text
 
-
 def test_fetch_earthquakes_handles_http_error():
     """Test handling of HTTP errors."""
 
@@ -274,7 +271,6 @@ def test_fetch_earthquakes_handles_http_error():
         ):
             fetch_earthquakes()
 
-
 def test_fetch_earthquakes_handles_timeout():
     """Test handling of request timeouts."""
 
@@ -289,7 +285,6 @@ def test_fetch_earthquakes_handles_timeout():
             match="Failed to fetch earthquake data",
         ):
             fetch_earthquakes()
-
 
 def test_fetch_earthquakes_handles_invalid_json():
     """Test handling of invalid JSON responses."""
