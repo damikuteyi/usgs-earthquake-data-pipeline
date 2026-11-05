@@ -1,3 +1,4 @@
+from pathlib import Path
 import logging
 
 import duckdb
@@ -8,7 +9,7 @@ USGS_API_URL = (
     "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson"
 )
 
-DATABASE_PATH = "data/earthquakes.duckdb"
+DATABASE_PATH = Path(__file__).resolve().parent.parent / "data" / "earthquakes.duckdb"
 
 logger = logging.getLogger(__name__)
 
@@ -164,6 +165,7 @@ def load_earthquakes(
     )
 
     try:
+        Path(database_path).parent.mkdir(parents=True, exist_ok=True)
         with duckdb.connect(database_path) as connection:
             connection.register("earthquake_df", df)
 

@@ -16,3 +16,15 @@ data/*.db
 # Test and coverage artifacts
 .coverage
 htmlcov/
+
+# Apache Airflow generated files
+logs/
+airflow/logs/
+airflow/*.db
+airflow/*.sqlite
+
+# Airflow runtime and configuration secrets
+airflow/simple_auth_manager_passwords.json.generated
+
+# Python test artifacts
+.pytest_cache/
