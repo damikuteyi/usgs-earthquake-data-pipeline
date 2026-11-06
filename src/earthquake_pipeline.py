@@ -196,7 +196,6 @@ def load_earthquakes(
         logger.exception("Failed to load earthquake records into DuckDB.")
         raise
 
-
 def main():
     """Run the complete earthquake data pipeline."""
 
